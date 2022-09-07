@@ -1,32 +1,5 @@
-Oscilloscope Clock 
-  using internal DACs, with WiFi and ntp sync.
-  
+/*Oscilloscope Clock 
   Mauro Pintus , Milano 2018/05/25
-  How to use it:
-  Load this sketch on a ESP32 board using the Arduino IDE 1.8.7
-  See Andreas Spiess video linked below if you dont know how to...
-  Connect your oscilloscope channels to GPIO25 and GPIO26 of the ESP32
-  Connect the ground of the oscilloscope to the GND of the ESP32 board
-  Put your Oscilloscope in XY mode
-  Adjust the vertical scale of the used channels to fit the clock
-  Enjoy Your new Oscilloscope Clock!!! :)
-  Additional notes:
-  By default this sketch will start from a fix time 10:08:37 everityme 
-  you reset the board.
-  To change it, modify the variables h,m,s below.
-  To synchronize the clock with an NTP server, you have to install 
-  the library NTPtimeESP from Andreas Spiess.
-  Then ncomment the line //#define NTP, removing the //.
-  Edit the WiFi credential in place of Your SSID and Your PASS.
-  Check in the serial monitor if it can reach the NTP server.
-  You mignt need to chouse a different pool server for your country.
-  If you want there is also a special mode that can be enabled uncommenting 
-  the line //#define EXCEL, removing the //. In this mode, the sketch
-  will run once and will output on the serial monitor all the coordinates
-  it has generated. You can use this coordinates to draw the clock 
-  using the graph function in Excel or LibreOffice
-  This is useful to test anything you want to display on the oscilloscope
-  to verify the actual points that will be generated.
   GitHub Repository
   https://github.com/maurohh/ESP32_OscilloscopeClock
   Twitter Page
@@ -49,9 +22,9 @@ Oscilloscope Clock
 
 #include "DataTable.h"
 
-#define BlankPin   34  // high blanks the display
-#define RelPin  4  // Relay HV out
-#define LedPin 2 // ledd
+#define BlankPin 2  // high blanks the display
+#define RelPin 4  // Relay HV out
+#define LedPin 13 // ledd
 
 
 
