@@ -1,4 +1,4 @@
-Data Tables for ESP32 Oscilloscope Clock
+/*Data Tables for ESP32 Oscilloscope Clock
   Mauro Pintus , Milano 2018/05/25
 *********************************************************************************/
 
