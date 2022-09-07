@@ -230,7 +230,7 @@ void setup()
   
   SIM_SCGC2 |= (SIM_SCGC2_DAC0|SIM_SCGC2_DAC1);
   VREF_TRM = 0x60;
-	VREF_SC = 0xE1;	
+  VREF_SC = 0xE1;	
   delay(100);
   
   DAC0_C0 = (DAC_C0_DACEN);
@@ -293,9 +293,12 @@ void loop() {
   //PlotTable(TestData,sizeof(TestData),0x00,0,11); //Without square
 
   int i;
+  digitalWriteFast(BlankPin, HIGH);	
   PlotTable(DialData,sizeof(DialData),0x00,1,0);      //2 to back trace
   PlotTable(DialDigits12,sizeof(DialDigits12),0x00,1,0);//2 to back trace 
   PlotTable(HrPtrData, sizeof(HrPtrData), 0xFF,0,9*h);  // 9*h
   PlotTable(MinPtrData,sizeof(MinPtrData),0xFF,0,9*m);  // 9*m
   PlotTable(SecPtrData,sizeof(SecPtrData),0xFF,0,5*s);  // 5*s
+  digitalWriteFast(BlankPin, LOW);
+  delay_us(5600);	
 }
