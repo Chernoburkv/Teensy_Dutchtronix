@@ -43,30 +43,6 @@ const    long interval       = 990; //milliseconds, you should twick this
                                     //to get a better accuracy
 
 
-//*****************************************************************************
-// PlotTable 
-//*****************************************************************************
-
-void PlotTable(byte *SubTable, int SubTableSize, int skip, int opt, int offset)
-{
-  int i=offset;
-  while (i<SubTableSize){
-    if (SubTable[i+2]==skip){
-      i=i+3;
-      if (opt==1) if (SubTable[i]==skip) i++;
-    }
-    Line(SubTable[i],SubTable[i+1],SubTable[i+2],SubTable[i+3]);  
-    if (opt==2){
-      Line(SubTable[i+2],SubTable[i+3],SubTable[i],SubTable[i+1]); 
-    }
-    i=i+2;
-    if (SubTable[i+2]==0xFF) break;
-  }
-}
-
-// End PlotTable 
-//*****************************************************************************
-
 
 
 //*****************************************************************************
@@ -77,14 +53,15 @@ inline void Dot(int x, int y)
 {
     if (lastx!=x){
       lastx=x;
-      dac_output_voltage(DAC_CHANNEL_1, x);
+      *(volatile uint16_t *)&(DAC0_DAT0L) = x;
     }
     
     if (lasty!=y){
       lasty=y;
-      dac_output_voltage(DAC_CHANNEL_2, y);
+      *(volatile uint16_t *)&(DAC1_DAT0L) = y;
     }
 }
+
 
 // End Dot 
 //*****************************************************************************
@@ -216,6 +193,31 @@ void Line(byte x1, byte y1, byte x2, byte y2)
 // End Line 
 //*****************************************************************************
 
+//*****************************************************************************
+// PlotTable 
+//*****************************************************************************
+
+void PlotTable(byte *SubTable, int SubTableSize, int skip, int opt, int offset)
+{
+  int i=offset;
+  while (i<SubTableSize){
+    if (SubTable[i+2]==skip){
+      i=i+3;
+      if (opt==1) if (SubTable[i]==skip) i++;
+    }
+    Line(SubTable[i],SubTable[i+1],SubTable[i+2],SubTable[i+3]);  
+    if (opt==2){
+      Line(SubTable[i+2],SubTable[i+3],SubTable[i],SubTable[i+1]); 
+    }
+    i=i+2;
+    if (SubTable[i+2]==0xFF) break;
+  }
+}
+
+// End PlotTable 
+//*****************************************************************************
+
+
 
 
 //*****************************************************************************
@@ -224,14 +226,21 @@ void Line(byte x1, byte y1, byte x2, byte y2)
 
 void setup() 
 {
+  
+  
+  SIM_SCGC2 |= (SIM_SCGC2_DAC0|SIM_SCGC2_DAC1);
+  VREF_TRM = 0x60;
+	VREF_SC = 0xE1;	
+  delay(100);
+  
+  DAC0_C0 = (DAC_C0_DACEN);
+  DAC1_C0 = (DAC_C0_DACEN);
+  
+  delay(100);
   pinMode(BlankPin, OUTPUT);   
   pinMode(LedPin, OUTPUT);
   pinMode(RelPin, OUTPUT);
-  
-  
-  
-  dac_output_enable(DAC_CHANNEL_1);
-  dac_output_enable(DAC_CHANNEL_2);
+
 
   if (h > 12) h=h-12;
   h=(h*5)+m/12;
@@ -290,18 +299,3 @@ void loop() {
   PlotTable(MinPtrData,sizeof(MinPtrData),0xFF,0,9*m);  // 9*m
   PlotTable(SecPtrData,sizeof(SecPtrData),0xFF,0,5*s);  // 5*s
 }
-
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
